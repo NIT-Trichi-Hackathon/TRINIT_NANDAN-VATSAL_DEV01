@@ -28,6 +28,7 @@ const PhilanthropistSignUp = () =>
         <option value="other">Other</option>
       </select>
       </div>
+      <input type="password" {...register("password", { required: true })} placeholder="Password"  className='inputField'/>
 
       {errors.exampleRequired && <span>This field is required</span>}
       
