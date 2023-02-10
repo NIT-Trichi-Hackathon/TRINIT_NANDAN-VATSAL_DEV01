@@ -3,16 +3,15 @@ import connectDB from "@/middleware/mongoose";
 
 const handler = async (req, res) => {
   if (req.method == "POST") {
-    for (let i = 0; i < req.body.length; i++) {
       let p = new Philanthropist({
-        donationPreference: req.body[i].donationPreference,
-        email: req.body[i].email,
-        name: req.body[i].name,
-        password: req.body[i].password,
-        phoneNumber: req.body[i].phoneNumber,
+        donationPreference: req.body.donationPreference,
+        email: req.body.email,
+        name: req.body.name,
+        password: req.body.password,
+        phoneNumber: req.body.phoneNumber,
       });
       await p.save();
-    }
+    
   } else {
     res.status(400).json({ error: "This method is not allowed" });
   }
