@@ -19,7 +19,7 @@ const NgoSignUp = () => {
     console.log(plans);
     console.log(history);
 
-    const data = {...e,plans,history}
+    const data = {...e,"futurePlans":plans,history}
     console.log(data)
 
     let res = await fetch(`api/addNgo`, {
