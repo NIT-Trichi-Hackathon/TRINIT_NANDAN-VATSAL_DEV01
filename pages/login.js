@@ -16,7 +16,7 @@ const Login = () => {
     const data = { ...emailPass, category}
     console.log(data)
 
-    let res = await fetch(`api/get${category}`, {
+    let res = await fetch(`api/login${category}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -58,6 +58,17 @@ const Login = () => {
 
   return (
     <div className="flex flex-col p-2 pt-10 items-center justify-center bg-green-500/10  space-y-5">
+<ToastContainer
+        position="bottom-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
 <div className="flex items-center">
       <div className="text-4xl tracking-wider">Log In /</div><div className="cursor-pointer text-blue-400/70 pl-2 text-2xl" onClick={()=>{router.push("/signup");}}>Sign Up </div>
       </div>
