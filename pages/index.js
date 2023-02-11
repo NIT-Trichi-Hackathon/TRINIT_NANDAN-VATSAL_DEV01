@@ -1,14 +1,17 @@
 import React from 'react'
 import Ngo from '@/models/Ngo'
 import mongoose from "mongoose";
-
-
+import TopPreferences from '@/components/TopPreferences';
+import Suggestions from '@/components/Suggestions'
 // export default function Home() 
 const Home = ({ngos}) => {
 {
   console.log(ngos);
   return (
-    <div className=" text-3xl ">Hi</div>
+    <div className=" text-3xl ">
+    <TopPreferences donationPreference={"health"} ngos={ngos}></TopPreferences>
+    <Suggestions donationPreference={"health"} ngos={ngos}></Suggestions>
+    </div>
 
   )
 }
