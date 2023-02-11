@@ -169,6 +169,13 @@ const NgoSignUp = () => {
         {/* <input type="text" {...register("plans")} placeholder="Plans"  className='inputField'/> */}
 
         {/* <input type="file" {...register("donationPreference")} placeholder="Donation Preference" className='inputField'/> */}
+        
+        <input
+          type="text"
+          {...register("location")}
+          placeholder="Location"
+          className="inputField"
+        />
         <input
           type="password"
           {...register("password", { required: true })}
