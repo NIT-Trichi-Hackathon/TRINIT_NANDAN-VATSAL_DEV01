@@ -27,8 +27,8 @@ const Post = ({ messages}) => {
       //   console.log(token);
       fetchData(mytoken);
 
-      console.log(userData);
-      console.log("hi");
+    //   console.log(userData);
+    //   console.log("hi");
     }
   }, []);
 
@@ -60,7 +60,7 @@ console.log(userData.email)
   // var decoded = jwt.verify(user.value, process.env.JWT_Key);
   // console.log(decoded) // bar
   const email = router.query.email;
-
+console.log(userData.email)
   const handleSendMessage = async () => {
     const data = { inboxUID: inboxUID, message: newMessage, token: token };
 
@@ -72,19 +72,28 @@ console.log(userData.email)
       body: JSON.stringify(data),
     });
     let response = await res.json();
+
+    setNewMessage("")
+    router.push("/messages/"+inboxUID)
+
   };
   return (
     <div className="flex flex-col items-center justify-center p-4">
       <div className="text-4xl py-2">Viewing messages for : {inboxUID} </div>
-
-      <div className="w-full">
-        {messages.map((item) => (
-          <div className="mb-3 w-full" key={item._id}>
-            <div className={`flex space-x-2 ` + item.senderEmail == userData.email && "mr-auto ml-10" + !(item.senderEmail == userData.email) && "ml-auto mr-10"}> 
+{/* ( item.senderEmail.localeCompare(userData.email)  && " bg-blue-300") + ((item.senderEmail===(userData.email)) && " bg-green-300") */}
             
-              <div className="text-xs my-auto"> {item.senderEmail} </div>
-              <div className="text-lg">{item.message}</div>
-            </div>
+      <div className="w-full">
+        {messages.map( (item) => 
+        (
+          <div className="flex mb-3 w-full" key={item._id}>
+            
+            {item.senderEmail=== (userData.email) &&<div className={`flex space-x-2  mr-auto `}> 
+             <div className="text-xs my-auto"> {item.senderEmail} </div>
+              <div className="text-lg">{item.message}</div></div>}
+              { !(item.senderEmail=== (userData.email)) &&<div className={`flex space-x-2  ml-auto `}> 
+              <div className="text-lg">{item.message}</div><div className="text-xs my-auto"> {item.senderEmail} </div>
+              </div>}
+            
           </div>
         ))}
       </div>
