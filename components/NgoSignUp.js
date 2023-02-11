@@ -15,12 +15,12 @@ const NgoSignUp = () => {
   const [plans, setPlans] = useState([""]);
   const [history, setHistory] = useState([""]);
   const onSubmit = async(e) => {
-    console.log(e);
-    console.log(plans);
-    console.log(history);
+    // console.log(e);
+    // console.log(plans);
+    // console.log(history);
 
     const data = {...e,"futurePlans":plans,history}
-    console.log(data)
+    // console.log(data)
 
     let res = await fetch(`api/addNgo`, {
         method: "POST",
@@ -30,6 +30,12 @@ const NgoSignUp = () => {
         body: JSON.stringify(data),
       });
       let response = await res.json();
+
+      // ------------------- //// addNews call -> api/addNews --> news ->CATEGORY : newNgo --> 
+      // "A new ngo is found do check out " ` name ` hopfully link
+
+      // amount oid 
+
 
       toast.success("Your account has been created", {
         position: "bottom-center",

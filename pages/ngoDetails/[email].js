@@ -34,6 +34,12 @@ const Post = ({ ngo }) => {
       body: JSON.stringify(data),
     });
 
+
+    // 1. database -> model donations /////// donations ----> d_id donor_email receiver amount 
+    // 2. news ----> api call -----> category donation --->
+    // 'ngo name' just  got a new donation of rs '  ' by ' -- '   
+
+
     let txnRes = await a.json();
     console.log(txnRes);
     let txnToken = txnRes.txnToken;
