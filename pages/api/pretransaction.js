@@ -3,18 +3,29 @@ const https = require("https");
 const PaytmChecksum = require("paytmchecksum");
 
 import connectDB from "../../middleware/mongoose";
+import donations from "@/models/donations";
 
 const handler = async (req, res) => {
   console.log("In req body");
   console.log(req.body);
   if (req.method == "POST") {
+    let donation = new donations({
+      receiver_name: req.body.name,
+      receiver_mail: req.body.email,
+      donationID: req.body.did,
+      amount: req.body.amount,
+      sender_name: req.body.sender_name,
+      sender_email: req.body.sender_email,
+    });
+
+    await donation.save();
     var paytmParams = {};
 
     paytmParams.body = {
       requestType: "Payment",
       mid: process.env.NEXT_PUBLIC_PAYTM_MID,
       websiteName: process.env.NEXT_PUBLIC_WEBSITE,
-      orderId: req.body.oid,
+      orderId: req.body.did,
       callbackUrl: "http://localhost:3000/api/posttransaction",
       txnAmount: {
         value: req.body.amount,
@@ -45,7 +56,7 @@ const handler = async (req, res) => {
           /* for Production */
           // hostname: 'securegw.paytm.in',
           port: 443,
-          path: `/theia/api/v1/initiateTransaction?mid=${process.env.NEXT_PUBLIC_PAYTM_MID}&orderId=${req.body.oid}`,
+          path: `/theia/api/v1/initiateTransaction?mid=${process.env.NEXT_PUBLIC_PAYTM_MID}&orderId=${req.body.did}`,
           method: "POST",
           headers: {
             "Content-Type": "application/json",
