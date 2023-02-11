@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
+import Link from 'next/link';
 
 
 const Chats = ({chats}) => {
@@ -101,11 +102,13 @@ const Chats = ({chats}) => {
         <div className='mx-auto mt-4 text-3xl flex font-serif'> Inbox </div>
         <div className="px-5 py-2"> Click to see messages : 
         <div className="flex flex-col w-1/3 justify-start  space-y-2 text-xl uppercase ">
-          {chats[0].inboxUIDs.map((item) => {
+
+           {chats[0] && chats[0].inboxUIDs.map((item) => {
             return (
-              <div className='border border-black/50 p-2' key={item}>{item}</div>
+              <Link passHref={true} href={`/messages/${item}`} className='border border-black/50 p-2' key={item}>{item}</Link>
             )
-          })}
+          })} 
+          {!chats[0] && <div>No chats yet</div>}
           </div>
           </div>
 
