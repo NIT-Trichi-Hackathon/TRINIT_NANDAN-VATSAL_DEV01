@@ -2,12 +2,58 @@ import { useRouter } from "next/router";
 import mongoose from "mongoose";
 import Ngo from "../../models/Ngo";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Head from "next/head";
 import Script from "next/script";
 
 const Post = ({ ngo }) => {
+  const [token, setToken] = useState("");
+  const [userData, setUserData] = useState("");
+
+  const jwt = require("jsonwebtoken");
+  //console.log(user.value);
+
+  // setUserData(jwt.verify(user.value, process.env.JWT_Key))
+
+  useEffect(() => {
+    const mytoken = localStorage.getItem("token");
+    if (!mytoken) {
+      router.push("/");
+    } else {
+      console.log(mytoken);
+      setToken(mytoken);
+
+      console.log(mytoken);
+      console.log(token);
+      fetchData(mytoken);
+
+      console.log(userData);
+      console.log("hi");
+    }
+  }, []);
+
+  const fetchData = async (mytoken) => {
+    console.log("this is fetch Data");
+    console.log(mytoken);
+    console.log(token);
+    let data = { token: mytoken, category: "phl" };
+    // console.log(data);
+    let a = await fetch(`http://localhost:3000/api/getUserDetails`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    let res = await a.json();
+    console.log(res);
+    setUserData(res.userDetails);
+    console.log("yay");
+    //await setUserData(jwt.verify(mytoken, "secretjwt"));
+    console.log(data);
+  };
+  //console.log(userData.email)
   const router = useRouter();
   //   console.log(ngo);
 
@@ -22,9 +68,19 @@ const Post = ({ ngo }) => {
 
   const initiatePayment = async () => {
     //Get a transaction token
-    let oid = Math.floor(Math.random() + Date.now());
+    let did = Math.floor(Math.random() + Date.now());
+    // fetchData(token);
 
-    const data = { oid, amount, email };
+    console.log(userData);
+
+    const data = {
+      did: did,
+      amount: amount,
+      email: email,
+      receiver_name: ngo.name,
+      sender_email: userData.email,
+      sender_name: userData.name,
+    };
     console.log(data);
     let a = await fetch("http://localhost:3000/api/pretransaction", {
       method: "POST", // or 'PUT'
@@ -34,11 +90,9 @@ const Post = ({ ngo }) => {
       body: JSON.stringify(data),
     });
 
-
-    // 1. database -> model donations /////// donations ----> d_id donor_email receiver amount 
+    // 1. database -> model donations /////// donations ----> d_id donor_email receiver amount
     // 2. news ----> api call -----> category donation --->
-    // 'ngo name' just  got a new donation of rs '  ' by ' -- '   
-
+    // 'ngo name' just  got a new donation of rs '  ' by ' -- '
 
     let txnRes = await a.json();
     console.log(txnRes);
@@ -48,7 +102,7 @@ const Post = ({ ngo }) => {
       root: "",
       flow: "DEFAULT",
       data: {
-        orderId: oid,
+        orderId: did,
         token: txnToken,
         tokenType: "TXN_TOKEN",
         amount: amount,
