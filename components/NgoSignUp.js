@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/router";
 
 const NgoSignUp = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -10,10 +14,37 @@ const NgoSignUp = () => {
   } = useForm();
   const [plans, setPlans] = useState([""]);
   const [history, setHistory] = useState([""]);
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async(e) => {
+    console.log(e);
     console.log(plans);
     console.log(history);
+
+    const data = {...e,plans,history}
+    console.log(data)
+
+    let res = await fetch(`api/addNgo`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      let response = await res.json();
+
+      toast.success("Your account has been created", {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000);
+    
+
   };
 
   const addItem = () => {

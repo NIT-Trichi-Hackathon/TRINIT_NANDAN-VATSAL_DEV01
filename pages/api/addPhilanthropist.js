@@ -2,6 +2,8 @@ import Philanthropist from "@/models/Philanthropist";
 import connectDB from "@/middleware/mongoose";
 
 const handler = async (req, res) => {
+  // console.log("inside")
+  // console.log(req.body)
   if (req.method == "POST") {
       let p = new Philanthropist({
         donationPreference: req.body.donationPreference,
