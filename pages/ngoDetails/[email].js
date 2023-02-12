@@ -4,8 +4,9 @@ import Ngo from "../../models/Ngo";
 
 import React, { useEffect, useState } from "react";
 
-import Head from "next/head";
+// import Head from "next/head";
 import Script from "next/script";
+import NgoDonations from "@/components/ngoDonations";
 
 const Post = ({ ngo }) => {
   const [token, setToken] = useState("");
@@ -21,22 +22,22 @@ const Post = ({ ngo }) => {
     if (!mytoken) {
       router.push("/");
     } else {
-      console.log(mytoken);
+      // console.log(mytoken);
       setToken(mytoken);
 
-      console.log(mytoken);
-      console.log(token);
+      // console.log(mytoken);
+      // console.log(token);
       fetchData(mytoken);
 
-      console.log(userData);
-      console.log("hi");
+      // console.log(userData);
+      // console.log("hi");
     }
   }, []);
 
   const fetchData = async (mytoken) => {
-    console.log("this is fetch Data");
-    console.log(mytoken);
-    console.log(token);
+    // console.log("this is fetch Data");
+    // console.log(mytoken);
+    // console.log(token);
     let data = { token: mytoken, category: "phl" };
     // console.log(data);
     let a = await fetch(`http://localhost:3000/api/getUserDetails`, {
@@ -47,11 +48,11 @@ const Post = ({ ngo }) => {
       body: JSON.stringify(data),
     });
     let res = await a.json();
-    console.log(res);
+    // console.log(res);
     setUserData(res.userDetails);
-    console.log("yay");
+    // console.log("yay");
     //await setUserData(jwt.verify(mytoken, "secretjwt"));
-    console.log(data);
+    // console.log(data);
   };
   //console.log(userData.email)
   const router = useRouter();
@@ -69,9 +70,9 @@ const Post = ({ ngo }) => {
   const initiatePayment = async () => {
     //Get a transaction token
     let did = Math.floor(Math.random() + Date.now());
-    // fetchData(token);
+    fetchData(token);
 
-    console.log(userData);
+    console.log("userDATA : ",userData);
 
     const data = {
       did: did,
@@ -81,7 +82,7 @@ const Post = ({ ngo }) => {
       sender_email: userData.email,
       sender_name: userData.name,
     };
-    console.log(data);
+    // console.log(data);
     let a = await fetch("http://localhost:3000/api/pretransaction", {
       method: "POST", // or 'PUT'
       headers: {
@@ -181,7 +182,7 @@ const Post = ({ ngo }) => {
       <div className="mt-10 text-2xl font-semibold">
         If you wish to donate us : ₹
         <input
-          type={Number}
+          type="number"
           value={amount}
           onChange={handleTargetChange}
           className="inputField"
@@ -193,6 +194,7 @@ const Post = ({ ngo }) => {
           Pay
         </button>
       </div>
+      <NgoDonations email={email} />
     </div>
   );
 };

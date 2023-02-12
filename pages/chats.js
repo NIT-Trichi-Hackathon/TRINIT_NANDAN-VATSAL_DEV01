@@ -1,17 +1,38 @@
 import inbox from '@/models/inbox';
 import mongoose from 'mongoose';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
 import Link from 'next/link';
 
 
-const Chats = ({chats}) => {
+const Chats = () => {
   // console.log(chats);
   const router = useRouter();
   const [members, setMembers] = useState([""]);
   const [convName, setConvName] = useState("");
+  const [chats, setChats] = useState([]);
+
+  useEffect(() => {
+    const fetchChats = async () => {
+      let a = await fetch(`api/mychats`, {
+        method: "POST", // or 'PUT'
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token: localStorage.getItem("token") }),
+      });
+      let res = await a.json();
+      setChats(res.mychats);
+      // console.log(res.mychats);
+    };
+    if (!localStorage.getItem("token")) {
+      router.push("/");
+    } else {
+      fetchChats();
+    }
+  }, [router]);
 
   function handleNameChange(event) 
   {
@@ -30,10 +51,11 @@ const Chats = ({chats}) => {
     // console.log(members[0])
     // console.log("ha")
   };
-  const createNewConv = async ({chats}) => 
+  const createNewConv = async () => 
   {
     // console.log(chats.inboxUIDs)
     const data = {"members": members, "inboxUID": convName }
+    
     
     // console.log(data)
 
@@ -77,7 +99,7 @@ const Chats = ({chats}) => {
       setTimeout(() => {
         setMembers([""]);
         setConvName("");
-        router.push(`/chats?email=${router.query.email}`);
+        router.push(`/chats`);
       }, 3000);
       
     
@@ -158,20 +180,20 @@ const Chats = ({chats}) => {
   )
 }
 
-export async function getServerSideProps(context) {
-    if (!mongoose.connections[0].readyState) {
-      await mongoose.connect(process.env.MONGO_URI);
-    }
-    // console.log(context.query.email)
-    var email = context.query.email;
-    // console.log(email)
-    let chats = await inbox.find( {"userEmail" : email});
-    // console.log(chats);
-    //let similar = await Book.find({title: books.title});
-    return {
-      props: { chats: JSON.parse(JSON.stringify(chats)) }, // will be passed to the page component as props
-    };
-  }
+// export async function getServerSideProps(context) {
+//     if (!mongoose.connections[0].readyState) {
+//       await mongoose.connect(process.env.MONGO_URI);
+//     }
+//     // console.log(context.query.email)
+//     var email = context.query.email;
+//     // console.log(email)
+//     let chats = await inbox.find( {"userEmail" : email});
+//     // console.log(chats);
+//     //let similar = await Book.find({title: books.title});
+//     return {
+//       props: { chats: JSON.parse(JSON.stringify(chats)) }, // will be passed to the page component as props
+//     };
+//   }
 
 export default Chats
 

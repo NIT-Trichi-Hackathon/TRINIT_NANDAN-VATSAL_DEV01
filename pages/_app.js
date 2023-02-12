@@ -1,5 +1,7 @@
+import NavBar from '@/components/NavBar';
 import '@/styles/globals.css'
 import React, { useEffect, useState } from 'react';
+
 
 export default function App({ Component, pageProps }) 
 {
@@ -19,5 +21,5 @@ export default function App({ Component, pageProps })
     //   console.log(token);
     // }, [token])
     
-  return <Component {...pageProps} user={user} />
+  return <><NavBar user={user}></NavBar> <Component {...pageProps} user={user} /> </>
 }

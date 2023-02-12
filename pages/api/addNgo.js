@@ -1,5 +1,6 @@
 import Ngo from "@/models/Ngo";
 import connectDB from "@/middleware/mongoose";
+import newsAndEvent from "@/models/newsAndEvent";
 
 const handler = async (req, res) => {
   if (req.method == "POST") {
@@ -15,6 +16,14 @@ const handler = async (req, res) => {
       futurePlans: req.body.futurePlans,
     });
     await n.save();
+    
+    const newsMSG = `A new NGO was found under the name ${req.body.name} that targets the area of ${req.body.target}. Its end goal is ${req.body.endGoal}. All donations are appretiated.`;
+    // console.log(newsMSG);
+    const news = newsAndEvent({
+      news:newsMSG,
+  });
+  await news.save();
+
   } else {
     res.status(400).json({ error: "This method is not allowed" });
   }

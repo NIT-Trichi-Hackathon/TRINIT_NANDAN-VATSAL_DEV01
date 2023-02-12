@@ -8,10 +8,8 @@ import React, { useState } from "react";
 
 const Signup = () => {
   const router = useRouter();
-  
-
   const [category, setCategory] = useState("");
-  console.log(category);
+  // console.log(category);
   return (
     <div className="flex flex-col p-2 pt-10 items-center justify-center bg-green-500/10  space-y-5">
         <ToastContainer
