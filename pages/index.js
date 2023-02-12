@@ -1,14 +1,57 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Ngo from '@/models/Ngo'
 import mongoose from "mongoose";
 import TopPreferences from '@/components/TopPreferences';
 import Suggestions from '@/components/Suggestions'
 import Link from 'next/link';
 import newsAndEvent from '@/models/newsAndEvent';
+import { useRouter } from 'next/router';
 // export default function Home() 
 const Home = ({ngos,news}) => {
 {
+  const [token, setToken] = useState("");
+  const [userData, setUserData] = useState("");
+  const router = useRouter()
+  const jwt = require('jsonwebtoken');
+
   // console.log(news);
+  useEffect(() => {
+    const mytoken = localStorage.getItem("token");
+    if (!mytoken) {
+      router.push("/");
+    } else {
+      // console.log(mytoken);
+      setToken(mytoken);
+
+      //   console.log(mytoken);
+      //   console.log(token);
+      fetchData(mytoken);
+
+      console.log(userData);
+    //   console.log("hi");
+    }
+  }, [router, userData]);
+  const fetchData = async (mytoken) => {
+    // console.log("this is fetch Data")
+    // console.log(mytoken);
+    // console.log(token);
+    let data = { token: mytoken , category:"phl"};
+    // console.log(data);
+    let a = await fetch(`http://localhost:3000/api/getUserDetails`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    let res = await a.json();
+    // console.log(res);
+    setUserData(res.userDetails)
+    // console.log("yay");
+    // await setUserData(jwt.verify(mytoken, "secretjwt"));
+    // console.log(data);
+  };
+
   const [target, setTarget] = useState("generalSupport");
   const [search, setSearch] = useState("")
   const [locationSearch, setLocationSearch] = useState("")
@@ -141,7 +184,7 @@ const Home = ({ngos,news}) => {
         
       </div>
       
-    <TopPreferences donationPreference={"health"} ngos={ngos}></TopPreferences>
+    <TopPreferences donationPreference={userData.donationPreference} ngos={ngos}></TopPreferences>
     <div className='flex flex-col py-4'>
     <div className='text-2xl italic animate-pulse'>Current News : </div>
     <ul className='pl-4 list-decimal space-y-0.5'>
@@ -152,7 +195,7 @@ const Home = ({ngos,news}) => {
       })}
       </ul>
     </div>
-    <Suggestions donationPreference={"health"} ngos={ngos}></Suggestions>
+    <Suggestions donationPreference={userData.donationPreference} ngos={ngos}></Suggestions>
     </div>
 
   )
