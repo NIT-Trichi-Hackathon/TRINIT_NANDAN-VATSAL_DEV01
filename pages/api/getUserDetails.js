@@ -11,15 +11,15 @@ const handler = async (req, res) =>
     const data = jwt.verify(token, process.env.JWT_Key);
     // console.log(data.email)
 
-    if(req.body.category == "phl")
+    if(data.category)
     {
         const userDetails = await Philanthropist.findOne({email: data.email});
-        res.status(200).json({ userDetails });
+        res.status(200).json({ userDetails:userDetails , category:true});
     }
-    else if(req.body.category == "ngo")
+    else if(!data.category)
     {
         const userDetails = await Ngo.findOne({email: data.email});
-        res.status(200).json({ userDetails });
+        res.status(200).json({ userDetails:userDetails , category:false});
     }
     else {
         res.status(400).json({ error: "Error in category" });}

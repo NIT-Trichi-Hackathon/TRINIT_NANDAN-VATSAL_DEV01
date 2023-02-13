@@ -10,32 +10,35 @@ import { useRouter } from 'next/router';
 const Home = ({ngos,news}) => {
 {
   const [token, setToken] = useState("");
-  const [userData, setUserData] = useState("");
+  const [booleanCategory, setBooleanCategory] = useState("");
+  // const [userData, setUserData] = useState("");
+  var userData = "";
   const router = useRouter()
   const jwt = require('jsonwebtoken');
 
   // console.log(news);
   useEffect(() => {
     const mytoken = localStorage.getItem("token");
+    const categoryLS = localStorage.getItem("category");
     if (!mytoken) {
-      router.push("/");
+      router.push("/login");
     } else {
       // console.log(mytoken);
       setToken(mytoken);
-
       //   console.log(mytoken);
       //   console.log(token);
       fetchData(mytoken);
 
       console.log(userData);
-    //   console.log("hi");
+      console.log("hi from use effect");
     }
   }, [router, userData]);
-  const fetchData = async (mytoken) => {
+
+    const fetchData = async (mytoken) => {
     // console.log("this is fetch Data")
     // console.log(mytoken);
     // console.log(token);
-    let data = { token: mytoken , category:"phl"};
+    let data = { token: mytoken };
     // console.log(data);
     let a = await fetch(`http://localhost:3000/api/getUserDetails`, {
       method: "POST",
@@ -46,8 +49,12 @@ const Home = ({ngos,news}) => {
     });
     let res = await a.json();
     // console.log(res);
-    setUserData(res.userDetails)
+    // setUserData(res.userDetails)
+    userData = res.userDetails;
+    setBooleanCategory(res.category);
     // console.log("yay");
+    console.log(res);
+    console.log(booleanCategory);
     // await setUserData(jwt.verify(mytoken, "secretjwt"));
     // console.log(data);
   };
@@ -184,7 +191,8 @@ const Home = ({ngos,news}) => {
         
       </div>
       
-    <TopPreferences donationPreference={userData.donationPreference} ngos={ngos}></TopPreferences>
+    { booleanCategory && <TopPreferences donationPreference={userData.donationPreference} ngos={ngos}></TopPreferences>
+    }
     <div className='flex flex-col py-4'>
     <div className='text-2xl italic animate-pulse'>Current News : </div>
     <ul className='pl-4 list-decimal space-y-0.5'>
@@ -195,8 +203,8 @@ const Home = ({ngos,news}) => {
       })}
       </ul>
     </div>
-    <Suggestions donationPreference={userData.donationPreference} ngos={ngos}></Suggestions>
-    </div>
+    {booleanCategory && <Suggestions donationPreference={userData.donationPreference} ngos={ngos}></Suggestions>
+}</div>
 
   )
 }
