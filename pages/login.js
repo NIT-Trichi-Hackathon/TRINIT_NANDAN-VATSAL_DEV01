@@ -27,7 +27,6 @@ const Login = () => {
       
       if (response.success) {
         localStorage.setItem("token", response.token);
-        localStorage.setItem("isUserLoggedIn", "true");
         toast.success("You are Logged In", {
           position: "bottom-center",
           autoClose: 3000,

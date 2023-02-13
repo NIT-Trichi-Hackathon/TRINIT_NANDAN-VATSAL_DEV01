@@ -17,10 +17,10 @@ const handler = async (req, res) =>
         
         {
           const jwt = require('jsonwebtoken');
-          var token = jwt.sign({ email: ngoUser.email, name: ngoUser.name, category: "ngo" }, process.env.JWT_Key , { expiresIn: '3d' });
+          var token = jwt.sign({ email: ngoUser.email, name: ngoUser.name, category: false }, process.env.JWT_Key , { expiresIn: '3d' });
           res
             .status(200)
-            .json({ success: true, token:token });
+            .json({ success: true, token:token, category:false });
         } else {
           res.status(200).json({ success: false, error: "Invalid Password" });
         }
